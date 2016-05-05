@@ -1,0 +1,40 @@
+.event-log-body {
+    display: inline-block;
+}
+
+.event-log-body > div:first-child {
+    font-size: medium;
+}
+
+.event-log-body > div {
+    font-size: small;
+}
+.event-log-icon{
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.action-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.action-icon-encounter {
+    background: url("image/flog_icon_encounter.png");
+}
+
+.action-log {
+    display: flex;
+    align-items: center;
+    font-size: large;
+    padding: 2px;
+    min-height: 50px;
+}
+
+.action-log-default {
+    background-color: #fec;
+    border: 1px solid #edb;
+}

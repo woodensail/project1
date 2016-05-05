@@ -1,0 +1,146 @@
+.font-big {
+    font-size: large;
+}
+
+.bg-info {
+    background-color: #fec;
+    padding: 5px;
+    border: 1px solid #dca;
+}
+
+.task-log {
+    display: flex;
+    align-items: center;
+    font-size: large;
+    padding: 2px;
+    min-height: 50px;
+}
+
+.task-log-default {
+    background-color: #fec;
+    border: 1px solid #edb;
+}
+.task-log-safe {
+    background-color: #d0e0d0;
+    border: 1px solid #c0d0c0;
+}
+.task-log-important {
+    background-color: #d0d0e0;
+    border: 1px solid #c0c0d0;
+}
+
+.task-log > span {
+    margin: 2px 5px;
+}
+.log-remark{
+    font-size: small;
+}
+.log-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.log-icon-start {
+    background: url("image/alog_icon_start.png");
+}
+
+.log-icon-returned {
+    background: url("image/alog_icon_returned.png");
+}
+
+.log-icon-clear-dungeon {
+    background: url("image/alog_icon_clear_dungeon.png");
+}
+
+.log-icon-complete {
+    background: url("image/alog_icon_complete.png");
+}
+
+.log-icon-dead {
+    background: url("image/alog_icon_dead.png");
+}
+
+.log-icon-encounter-event {
+    background: url("image/alog_icon_encounter_event.png");
+}
+
+.log-icon-encounter-got-item {
+    background: url("image/alog_icon_encounter_got_item.png");
+}
+
+.log-icon-encounter-lose {
+    background: url("image/alog_icon_encounter_lose.png");
+}
+
+.log-icon-encounter-run {
+    background: url("image/alog_icon_encounter_run.png");
+}
+
+.log-icon-encounter-win {
+    background: url("image/alog_icon_encounter_win.png");
+}
+
+.log-icon-encounter-win-monster-lock {
+    background: url("image/alog_icon_encounter_win_monster_block.png");
+}
+
+.log-icon-enter-block-monster {
+    background: url("image/alog_icon_enter_block_monster.png");
+}
+
+.log-icon-enter-block-normal {
+    background: url("image/alog_icon_enter_block_normal.png");
+}
+
+.log-icon-safe-zone {
+    background: url("image/alog_icon_enter_block_safe_zone.png");
+}
+
+.log-icon-enter-dungeon{
+    background: url("image/alog_icon_enter_dungeon.png");
+}
+
+.log-icon-enter-floor {
+    background: url("image/alog_icon_enter_floor.png");
+}
+
+.log-icon-event {
+    background: url("image/alog_icon_event.png");
+}
+
+.log-icon-magic {
+    background: url("image/alog_icon_magic.png");
+}
+
+.log-icon-quest-clear {
+    background: url("image/alog_icon_quest_clear.png");
+}
+
+.log-icon-rest {
+    background: url("image/alog_icon_rest.png");
+}
+
+.log-icon-return {
+    background: url("image/alog_icon_return.png");
+}
+
+.log-icon-spring {
+    background: url("image/alog_icon_spring.png");
+}
+
+.log-icon-trap {
+    background: url("image/alog_icon_trap.png");
+}
+
+.log-icon-treasure {
+    background: url("image/alog_icon_treasure.png");
+}
+
+.log-icon-treasure-abandon {
+    background: url("image/alog_icon_treasure_abandon.png");
+}
+
+.log-icon-use-item {
+    background: url("image/alog_icon_use_item.png");
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="index.bundle.js"></script>
+</head>
+<body ng-controller="mainCtrl">
+<div style="width: 40em;margin-left:auto;margin-right:auto;">
+
+    <uib-tabset active="active">
+        <uib-tab index="0" heading="首页">
+            <div>现在地{{taskInfo.locationName}}</div>
+            <div>目的地</div>
+            <div class="bg-info"><span class="font-big">{{taskInfo.taskName}}</span>
+                <button type="button" class="btn btn-primary">任务日志</button>
+            </div>
+            <div>探索中的迷宫</div>
+            <div class="bg-info"><span class="font-big">{{taskInfo.taskName}}</span>
+                <button type="button" class="btn btn-primary">任务日志</button>
+            </div>
+            <div>任务状态</div>
+            <div class="bg-info"><span class="font-big">{{taskInfo.taskName}}</span>
+                <button type="button" class="btn btn-primary">任务日志</button>
+            </div>
+        </uib-tab>
+        <uib-tab index="1" heading="战斗记录">
+            <div ng-click="clickLog(log)" class="task-log" ng-repeat="log in taskLogs"
+                 ng-class="'task-log-'+log.category">
+                <span ng-class="'log-icon log-icon-'+log.type"></span><span>{{::log.time}}</span><span
+                    ng-if="log.target" class="monster"
+                    ng-class="log.target">{{::log.remark}}</span><span>{{::log.info}}</span><span
+                    ng-if="log.remark" class="log-remark">{{::log.remark}}</span>
+            </div>
+        </uib-tab>
+    </uib-tabset>
+
+
+    <script type="text/ng-template" id="eventLog">
+        <div class="modal-header">
+            <h3 class="modal-title">{{event.time}}</h3>
+        </div>
+        <div class="modal-body">
+            <div ng-if="!event.battleLog">
+                <div ng-class="::'task-log-'+event.category" class="task-log">
+                    <span ng-class="::'log-icon log-icon-'+event.type"></span>
+
+                    <div class="event-log-body">
+                        <div>{{::event.info}}</div>
+                        <div>{{::event.content}}</div>
+                        <div ng-if="::event.remark">{{::event.remark}}</div>
+                        <div ng-repeat="char in event.status.characters">{{::parseChar(char)}}</div>
+                    </div>
+
+                </div>
+            </div>
+            <div ng-if="event.battleLog">
+                <div ng-repeat="action in event.battleLog" class="action-log"
+                     ng-class="::'action-log-'+action.category">
+                    <div class="event-log-icon">
+                    <span ng-class="::'action-icon action-icon-'+action.type"></span>
+                    </div>
+                    <div class="event-log-body">
+                        <div>{{::action.title}}</div>
+                        <div>{{::action.content}}</div>
+                        <div ng-repeat="index in action.char">{{::parseChar(action.status.characters[index])}}</div>
+                        <div ng-repeat="index in action.enemy">{{::parseChar(action.status.enemies[index])}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="eventClose()">关闭</button>
+        </div>
+    </script>
+</div>
+
+
+</body>
+</html>
