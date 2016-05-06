@@ -25,6 +25,18 @@
 .action-icon-encounter {
     background: url("image/flog_icon_encounter.png");
 }
+.action-icon-success {
+    background: url("image/flog_icon_encounter.png");
+}
+.action-icon-start {
+    background: url("image/flog_icon_encounter.png");
+}
+.action-icon-attack {
+    background: url("image/flog_icon_encounter.png");
+}
+.action-icon-die {
+    background: url("image/flog_icon_encounter.png");
+}
 
 .action-log {
     display: flex;

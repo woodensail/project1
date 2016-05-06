@@ -10,17 +10,19 @@ import './index.css'
 import './monster.css'
 import './event.css'
 import 'lodash'
+import {result} from './gameplay/gameplay'
+console.log(result);
 
 angular.element(document).ready(function () {
 	var app = angular.module('app', ['ui.bootstrap']);
 	app.controller('mainCtrl', ['$scope', '$uibModal', 'parseType', function ($scope, $uibModal, parseType) {
 		var status = {
 			characters: [{
-				name: '塔尼斯', hp: 43, maxHp: 43, mp: 31, maxMp: 31, exp: 5784, lv: 9
+				name: '塔尼斯', hp: 100, maxHp: 100, mp: 31, maxMp: 31, exp: 5784, lv: 9
 			}, {
-				name: '拉伊', hp: 43, maxHp: 49, mp: 49, maxMp: 31, exp: 5567, lv: 9
+				name: '拉伊', hp: 100, maxHp: 100, mp: 49, maxMp: 31, exp: 5567, lv: 9
 			}, {
-				name: '法伊斯托斯', hp: 39, maxHp: 39, mp: 53, maxMp: 53, exp: 5739, lv: 9
+				name: '法伊斯托斯', hp: 100, maxHp: 100, mp: 53, maxMp: 53, exp: 5739, lv: 9
 			}]
 		};
 		$scope.clickLog = function (log) {
@@ -94,32 +96,48 @@ angular.element(document).ready(function () {
 				target: 'monster-002',
 				battleInfo: {enemies: [{name: '史莱姆A', hp: 11, maxHp: 11}, {name: '史莱姆B', hp: 11, maxHp: 11}]},
 				battleLog: [{
-					titleTmp: '遭遇2只史莱姆',
-					contentTmp: '遇到1个敌人(等级1)',
-					char: [0, 1, 2],
+					title: '遭遇2只史莱姆',
+					content: '遇到1个敌人(等级1)',
+					//char: [0, 1, 2],
 					type: 'encounter'
 				},
 					{
-						titleTmp: '{{c0}}发动攻击',
-						contentTmp: '对{{e0}}造成了11点伤害',
-						enemy: [0],
+						title: '{{c0}}发动攻击',
+						content: '对{{e0}}造成了11点伤害',
+						//enemy: [0],
 						type: 'encounter',
 						statusChange: {enemies: {0: {hp: 0}}}
 					},
 					{
-						titleTmp: '{{e0}}倒下了',
+						title: '{{e0}}倒下了',
 						type: 'encounter'
 					},
 					{
-						titleTmp: '{{c1}}吟唱了魔法',
-						contentTmp: '{{e1}}造成了11点伤害',
+						title: '{{c1}}吟唱了魔法',
+						content: '{{e1}}造成了11点伤害',
 						enemy: [1],
 						type: 'encounter'
 					},
 					{
-						titleTmp: '{{e1}}倒下了',
+						title: '{{e1}}倒下了',
 						type: 'encounter'
 					}]
+			},
+			{
+				time: '13:30',
+				info: '队伍遇到了2只史莱姆',
+				type: 'encounter-win',
+				target: 'monster-002',
+				battleInfo: {
+					enemies: [{
+						name: '史莱姆A', hp: 20, maxHp: 20
+					}, {
+						name: '史莱姆B', hp: 20, maxHp: 20
+					}, {
+						name: '史莱姆C', hp: 20, maxHp: 20
+					}]
+				},
+				battleLog: result
 			},
 			{
 				time: '11:41',
@@ -196,28 +214,34 @@ angular.element(document).ready(function () {
 				});
 				event.battleLog.forEach(function (action) {
 
-					//填充模板
-					if (action.titleTmp) {
-						action.title = $scope.parseTemplate(action.titleTmp, vars);
-					}
-					if (action.contentTmp) {
-						action.content = $scope.parseTemplate(action.contentTmp, vars);
-					}
+					////填充模板
+					//if (action.title) {
+					//	action.title = $scope.parseTemplate(action.title, vars);
+					//}
+					//if (action.content) {
+					//	action.content = $scope.parseTemplate(action.content, vars);
+					//}
 
 					//计算当前状态
 					if (action.statusChange) {
 						action.status = _.cloneDeep(status);
-						_.forEach(action.statusChange.char, function (v, k) {
+						_.forEach(action.statusChange.chars, function (v, k) {
 							action.status.characters[k] = _.defaults({}, v, action.status.characters[k]);
+							action.char=action.char||[];
+							action.char.push(k)
 						});
 						_.forEach(action.statusChange.enemies, function (v, k) {
+							console.log( v, action.status.enemies[k]);
 							action.status.enemies[k] = _.defaults({}, v, action.status.enemies[k]);
+							action.enemy=action.enemy||[];
+							action.enemy.push(k)
 						});
 					} else {
 						action.status = status;
 					}
 					parseType.action(action);
 				});
+				console.log(event.battleLog);
 			}
 		}]);
 
@@ -234,7 +258,11 @@ angular.element(document).ready(function () {
 		};
 
 		var actionTypes = {
-			'encounter': {category: 'default'}
+			'encounter': {category: 'default'},
+			'success': {category: 'default'},
+			'attack': {category: 'default'},
+			'die': {category: 'default'},
+			'start': {category: 'default'}
 		};
 		return {
 			event(item){
