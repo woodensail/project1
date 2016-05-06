@@ -1,6 +1,7 @@
 /**
  * Created by sail on 2016/5/5.
  */
+'use strict';
 import 'lodash'
 
 function explore() {
@@ -26,6 +27,11 @@ class TimeQueue {
 		this.enemySurvive = enemies.length;
 		this.count = chars.length + enemies.length;
 		this.creatures = chars.concat(enemies);
+		this.creatureMap = this.creatures.reduce(function (r, x, i) {
+			x.id = i;
+			r[i] = x;
+			return r;
+		}, {});
 		this.chars = chars;
 		this.enemies = enemies;
 		this.times = chars.map(x=>1000).concat(enemies.map(x=>1000));
@@ -52,8 +58,8 @@ class TimeQueue {
 	}
 
 	run() {
+		var _this = this;
 		while (1) {
-
 			// 其中一方全部死亡时游戏结束，返回false
 			if (this.charSurvive === 0 || this.enemySurvive === 0) {
 				if (this.charSurvive) {
@@ -69,6 +75,7 @@ class TimeQueue {
 				return true
 			}
 			// 跳过死亡生物
+			// TODO 昏睡等状况也可能会由此步骤处理
 			if (this.creatures[this.index].isDead) {
 				this.index++;
 				this.index %= this.count;
@@ -76,10 +83,22 @@ class TimeQueue {
 			}
 			if (this.times[this.index] < 0) {
 
-				var action = this.creatures[this.index].action(this.chars, this.enemies);
+				var [action,effects] = this.creatures[this.index].action(this.chars, this.enemies);
+				if (effects) {
+					var changed = {};
+					effects.forEach(function (effect) {
+						switch (effect[1]) {
+							case 'hp':
+								effect[0].changeHp(effect[2]);
+								changed[effect[0].id] = true;
+						}
+					});
+					action.statusChange = this.calcChange(_.keys(changed));
+				}
 				this.times[this.index] += action.time;
 				this.genReport(action);
 				this.deathCheck();
+				break;
 			} else {
 				this.index++;
 				this.index %= this.count;
@@ -103,15 +122,21 @@ class TimeQueue {
 
 	calcChange(targets) {
 		var _this = this, result = {}, flag = false;
-		targets.forEach(function (target) {
-			var index = _this.creatures.indexOf(target);
+		targets.forEach(function (index) {
+			var target;
+			if (index instanceof Creature) {
+				target = index;
+				index = target.id;
+			} else {
+				target = _this.creatureMap[index];
+			}
 			flag = true;
 			if (index < _this.charCount) {
 				result.chars = result.chars || {};
-				result.chars[index]=_.pick(target,'hp','mp');
+				result.chars[index] = _.pick(target, 'hp', 'mp');
 			} else {
 				result.enemies = result.enemies || {};
-				result.enemies[index-_this.charCount]=_.pick(target,'hp','mp');
+				result.enemies[index - _this.charCount] = _.pick(target, 'hp', 'mp');
 			}
 		});
 		return flag ? result : void(0);
@@ -130,6 +155,7 @@ class Creature {
 		this.isDead = options.idDead || false;
 		this.maxHp = options.maxHp;
 		this.hp = options.hp || options.maxHp;
+		this.commonStrategies = options.commonStrategies || {buff: 2, heal: 2, attack: 2}
 	}
 
 	action(chars, enemies) {
@@ -141,22 +167,25 @@ class Creature {
 	attack(enemies) {
 		var target = enemies.find(x=>!x.isDead);
 		var damage = 12;
-		target.setHp(target.hp - damage);
-		return new Action(this, 'attack', {
-			time: 3000, target: target.name, damage, statusChange: this.timeQueue.calcChange([target])
-		});
+		//target.setHp(target.hp - damage);
+		return [new Action(this, 'attack', {
+			time: 1000, target: target.name, damage//, statusChange: this.timeQueue.calcChange([target])
+		}), [[target, 'hp', -damage]]];
 	}
 
 
-	setHp(hp) {
-		if (hp < 0) {
-			hp = 0;
-		} else if (hp > this.maxHp) {
-			hp = maxHp;
+	changeHp(hp) {
+		console.log(this.isDead);
+		if (this.isDead) {
+			return;
 		}
-
-		this.hp = hp;
-		if (hp <= 0) {
+		this.hp += hp;
+		if (this.hp < 0) {
+			this.hp = 0;
+		} else if (this.hp > this.maxHp) {
+			this.hp = maxHp;
+		}
+		if (this.hp === 0) {
 			this.isDead = true;
 		}
 	}
